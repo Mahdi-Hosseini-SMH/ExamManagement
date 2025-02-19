@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اضافه کردن استاد به دوره</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .message {
+            margin: 15px 0;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>اضافه کردن استاد به دوره</h2>
+    <select id="courseSelect" required>
+        <option value="">لطفاً دوره را انتخاب کنید</option>
+    </select>
+    <select id="teacherSelect" required>
+        <option value="">لطفاً استاد را انتخاب کنید</option>
+    </select>
+    <button onclick="addTeacherToCourse()">اضافه کردن استاد</button>
+    <div id="message" class="message"></div>
+</div>
+
+<script>
+    async function loadCourses() {
+        try {
+            const response = await fetch('http://localhost:8080/course/without-teacher');
+            const courses = await response.json();
+            console.log('Loaded Courses:', courses); // بررسی داده‌های در حال بارگذاری
+            const courseSelect = document.getElementById('courseSelect');
+
+            // اطمینان از وجود داده‌ها
+            if (courses.length === 0) {
+                console.log('هیچ دوره‌ای برای بارگذاری وجود ندارد.');
+                return;
+            }
+
+            courses.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.identifier; // فرض بر این است که id در شی دوره وجود دارد
+                option.textContent = `${course.title} ${course.identifier} (${course.startDate})`; // فرض بر این است که title در شی دوره موجود است
+                courseSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading courses:', error);
+            document.getElementById('message').innerText = 'خطا در بارگذاری دوره‌ها';
+        }
+    }
+
+    async function loadTeachers() {
+        try {
+            const response = await fetch('http://localhost:8080/teacher/all');
+            const teachers = await response.json();
+            const teacherSelect = document.getElementById('teacherSelect');
+
+            teachers.forEach(teacher => {
+                const option = document.createElement('option');
+                option.value = teacher.nationalCode; // فرض بر این است که nationalCode به عنوان شناسه یکتا استفاده می‌شود
+                option.textContent = `${teacher.firstName} ${teacher.lastName} (${teacher.nationalCode})`; // نمایش نام و شناسه
+                teacherSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading teachers:', error);
+            document.getElementById('message').innerText = 'خطا در بارگذاری استادها';
+        }
+    }
+
+    async function addTeacherToCourse() {
+        const courseId = document.getElementById('courseSelect').value;
+        const teacherId = document.getElementById('teacherSelect').value;
+
+        console.log('Selected Course ID:', courseId);
+        console.log('Selected Teacher ID:', teacherId);
+
+        // بررسی انتخاب‌ها
+        if (!courseId || !teacherId) {
+            document.getElementById('message').innerText = 'لطفاً ابتدا دوره و استاد را انتخاب کنید.';
+            return; // از ادامه اجرای تابع جلوگیری می‌کند
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8080/course/add-teacher/${courseId}/teachers/${teacherId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('خطا در اضافه کردن استاد');
+            }
+
+            const updatedCourse = await response.json();
+            document.getElementById('message').innerText = `استاد با آیدی ${teacherId} به دوره با آیدی ${courseId} اضافه شد.`;
+        } catch (error) {
+            document.getElementById('message').innerText = error.message;
+        }
+    }
+
+    // بارگذاری دوره‌ها و معلم‌ها در بارگذاری صفحه
+    window.onload = () => {
+        loadCourses();
+        loadTeachers();
+    };
+</script>
+
+</body>
+</html>
