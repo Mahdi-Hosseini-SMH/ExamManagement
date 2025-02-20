@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اضافه کردن دانش‌آموز به دوره</title>
+    <style>
+        /* استایل‌ها همانند قبل */
+        /* ... */
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>اضافه کردن دانش‌آموز به دوره</h2>
+    <select id="courseSelect" required>
+        <option value="">لطفاً دوره را انتخاب کنید</option>
+    </select>
+    <select id="studentSelect" multiple required>
+        <option value="">لطفاً حداقل یک دانش‌آموز را انتخاب کنید</option>
+    </select>
+    <button onclick="addStudentsToCourse()">اضافه کردن دانش‌آموزان</button>
+    <div id="message" class="message"></div>
+</div>
+
+<script>
+    async function loadCourses() {
+        try {
+            const response = await fetch('http://localhost:8080/course/courses');
+            const courses = await response.json();
+            const courseSelect = document.getElementById('courseSelect');
+
+            if (courses.length === 0) {
+                courseSelect.innerHTML = '<option value="">هیچ دوره‌ای برای بارگذاری وجود ندارد.</option>';
+                return;
+            }
+
+            courses.forEach(course => {
+                const option = document.createElement('option');
+                option.value = course.identifier;
+                option.textContent = `${course.title} (${course.identifier})`;
+                courseSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading courses:', error);
+            document.getElementById('message').innerText = 'خطا در بارگذاری دوره‌ها';
+        }
+    }
+
+    async function loadStudents() {
+        try {
+            const response = await fetch('http://localhost:8080/student/all');
+            const students = await response.json();
+            const studentSelect = document.getElementById('studentSelect');
+
+            if (students.length === 0) {
+                studentSelect.innerHTML = '<option value="">هیچ دانش‌آموزی برای بارگذاری وجود ندارد.</option>';
+                return;
+            }
+
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id; // اطمینان حاصل کنید که id درست است
+                option.textContent = `${student.firstName} ${student.lastName} (${student.nationalCode})`;
+                studentSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading students:', error);
+            document.getElementById('message').innerText = 'خطا در بارگذاری دانش‌آموزان';
+        }
+    }
+
+    async function addStudentsToCourse() {
+        const courseId = document.getElementById('courseSelect').value;
+        const studentSelect = document.getElementById('studentSelect');
+        const selectedStudents = Array.from(studentSelect.selectedOptions).map(option => option.value);
+
+        if (!courseId || selectedStudents.length === 0) {
+            document.getElementById('message').innerText = 'لطفاً ابتدا دوره و حداقل یک دانش‌آموز را انتخاب کنید.';
+            return;
+        }
+
+        try {
+            let identifier;
+            const promises = selectedStudents.map(nationalCode =>
+                fetch(`http://localhost:8080/course/add-student/${identifier}/students/${nationalCode}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+            );
+
+            // منتظر تکمیل همه درخواست‌ها هستیم
+            await Promise.all(promises);
+
+            document.getElementById('message').innerText = 'دانش‌آموزان با موفقیت به دوره اضافه شدند.';
+        } catch (error) {
+            console.error('Adding students to course failed:', error);
+            document.getElementById('message').innerText = 'اضافه کردن دانش‌آموزان به دوره ناموفق بود.';
+        }
+    }
+
+    window.onload = () => {
+        loadCourses();
+        loadStudents(); // بارگذاری دانش‌آموزان
+    };
+</script>
+
+</body>
+</html>

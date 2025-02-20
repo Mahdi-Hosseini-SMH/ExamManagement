@@ -4,109 +4,109 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تعریف دوره</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: #333;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: #333;
-        }
-
-        label {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        input[type="text"],
-        input[type="date"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            transition: border-color 0.3s;
-        }
-
-        input[type="text"]:focus,
-        input[type="date"]:focus {
-            border-color: #2575fc;
-            outline: none;
-            box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            background-color: #2575fc;
-            color: #fff;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-            border: 1px solid transparent;
-        }
-
-        button:hover {
-            background-color: #1a5bbf;
-            transform: translateY(-1px);
-        }
-
-        button:active {
-            transform: translateY(1px);
-        }
-
-        #response {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.7);
-            color: #333;
-            text-align: center;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            body {
+                background: linear-gradient(135deg, #6a11cb, #2575fc);
+                color: #333;
+                padding: 20px;
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
             }
-        }
-    </style>
+
+            .container {
+                width: 100%;
+                max-width: 500px;
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 15px;
+                padding: 20px;
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(10px);
+                animation: fadeIn 0.5s ease-out;
+            }
+
+            h1 {
+                text-align: center;
+                margin-bottom: 20px;
+                font-size: 24px;
+                color: #333;
+            }
+
+            label {
+                font-size: 14px;
+                color: #666;
+                margin-bottom: 5px;
+                display: block;
+            }
+
+            input[type="text"],
+            input[type="date"] {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                transition: border-color 0.3s;
+            }
+
+            input[type="text"]:focus,
+            input[type="date"]:focus {
+                border-color: #2575fc;
+                outline: none;
+                box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
+            }
+
+            button {
+                width: 100%;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                background-color: #2575fc;
+                color: #fff;
+                cursor: pointer;
+                transition: background-color 0.3s, transform 0.3s;
+                border: 1px solid transparent;
+            }
+
+            button:hover {
+                background-color: #1a5bbf;
+                transform: translateY(-1px);
+            }
+
+            button:active {
+                transform: translateY(1px);
+            }
+
+            #response {
+                margin-top: 20px;
+                padding: 10px;
+                border-radius: 5px;
+                background-color: rgba(255, 255, 255, 0.7);
+                color: #333;
+                text-align: center;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        </style>
     <script src="script.js" defer></script>
 </head>
 <body>

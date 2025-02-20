@@ -1,7 +1,10 @@
 package ir.maktabsharif.exammanagement.service;
 
 import ir.maktabsharif.exammanagement.model.dto.studentDTO.StudentRequestDTO;
+import ir.maktabsharif.exammanagement.model.dto.studentDTO.StudentResponseDTO;
+import ir.maktabsharif.exammanagement.model.dto.teacherDTO.TeacherResponseDTO;
 import ir.maktabsharif.exammanagement.model.entity.Student;
+import ir.maktabsharif.exammanagement.model.entity.Teacher;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,4 +25,8 @@ public interface StudentService extends BaseService<Student , StudentRequestDTO>
 
     @Override
     Optional<Student> findById(UUID uuid);
+
+    List<StudentResponseDTO> getAllStudent();
+
+    public StudentResponseDTO convertToDTO(Student student);
 }

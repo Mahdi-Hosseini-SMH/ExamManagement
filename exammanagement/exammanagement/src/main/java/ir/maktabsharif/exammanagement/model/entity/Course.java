@@ -1,10 +1,7 @@
 package ir.maktabsharif.exammanagement.model.entity;
 
 import ir.maktabsharif.exammanagement.model.baseentity.BaseModel;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -24,7 +21,7 @@ public class Course extends BaseModel {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    @OneToOne
+    @ManyToOne
     private Teacher teacher;
 
     @ManyToMany

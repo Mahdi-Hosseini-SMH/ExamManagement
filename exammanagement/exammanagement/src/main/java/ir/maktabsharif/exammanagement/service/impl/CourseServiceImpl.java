@@ -2,13 +2,9 @@ package ir.maktabsharif.exammanagement.service.impl;
 
 import ir.maktabsharif.exammanagement.model.dto.courseDTO.CourseRequestDTO;
 import ir.maktabsharif.exammanagement.model.dto.courseDTO.CourseResponseDTO;
-import ir.maktabsharif.exammanagement.model.dto.teacherDTO.TeacherRequestDTO;
-import ir.maktabsharif.exammanagement.model.dto.teacherDTO.TeacherResponseDTO;
-import ir.maktabsharif.exammanagement.model.dto.userDTO.UserResponseDTO;
 import ir.maktabsharif.exammanagement.model.entity.Course;
 import ir.maktabsharif.exammanagement.model.entity.Student;
 import ir.maktabsharif.exammanagement.model.entity.Teacher;
-import ir.maktabsharif.exammanagement.model.entity.User;
 import ir.maktabsharif.exammanagement.repository.CourseRepository;
 import ir.maktabsharif.exammanagement.repository.StudentRepository;
 import ir.maktabsharif.exammanagement.repository.TeacherRepository;
@@ -22,7 +18,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.hibernate.boot.model.process.spi.MetadataBuildingProcess.build;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -40,7 +35,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course register(CourseRequestDTO courseRequestDTO) {
         Course course = new Course();
-        course.setIdentifier(course.getIdentifier());
+        course.setIdentifier(courseRequestDTO.getIdentifier());
         course.setTitle(courseRequestDTO.getTitle());
         course.setStartDate(courseRequestDTO.getStartDate());
         course.setEndDate(courseRequestDTO.getEndDate());
@@ -78,14 +73,13 @@ public class CourseServiceImpl implements CourseService {
         return Optional.empty();
     }
 
-    public Course addStudentToCourse(UUID courseID, UUID studentID) {
+    public Course addStudentToCourse(String identifier, String nationalCode) {
 
-        Student student = studentRepository.findById(studentID)
-                .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + studentID));
+        Student student = studentRepository.findByNationalCode(nationalCode)
+                .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + nationalCode));
 
-        // پیدا کردن دوره
-        Course course = courseRepository.findById(courseID)
-                .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseID));
+        Course course = courseRepository.findByIdentifier(identifier)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + identifier));
 
         List<Student> students = course.getStudents();
         if (students == null) {
@@ -98,9 +92,9 @@ public class CourseServiceImpl implements CourseService {
     }
 
 
-    public Course addTeacherToCourse(String identifier, UUID teacherID) {
+    public Course addTeacherToCourse(String identifier, String nationalCode) {
 
-        Teacher teacher = teacherRepository.findById(teacherID)
+        Teacher teacher = teacherRepository.findByNationalCode(nationalCode)
                 .orElseThrow(() -> new RuntimeException("Teacher not found"));
 
         Course course = courseRepository.findByIdentifier(identifier)
@@ -124,11 +118,49 @@ public class CourseServiceImpl implements CourseService {
 
     public CourseResponseDTO convertToDTO(Course course) {
         return new CourseResponseDTO(
+                course.getIdentifier(),
                 course.getTitle(),
                 course.getStartDate(),
                 course.getEndDate()
         );
     }
 
+    public Course updateTeacherInCourse(String identifier, Teacher updatedTeacher) {
+        Course course = courseRepository.findByIdentifier(identifier)
+                .orElseThrow(() -> new EntityNotFoundException("دوره با این شناسه یکتا یافت نشد: " + identifier));
+        course.setTeacher(updatedTeacher);
+        return courseRepository.save(course);
+
+    }
+
+    public Course removeStudentFromCourse(UUID courseID, UUID studentID) {
+        Course course = courseRepository.findById(courseID)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseID));
+
+        List<Student> students = course.getStudents();
+        if (students != null) {
+            students.removeIf(student -> student.getId().equals(studentID)); // حذف دانشجو
+        }
+        course.setStudents(students);
+        return courseRepository.save(course);
+    }
+
+    public void removeTeacherFromCourse(String identifier) {
+        Course course = courseRepository.findByIdentifier(identifier)
+                .orElseThrow(() -> new EntityNotFoundException("شناسه یکتا یافت نشد: " + identifier));
+
+        course.setTeacher(null);
+        courseRepository.save(course);
+    }
+
+
+    public Course getCourseWithParticipants(UUID courseID) {
+        Course course = courseRepository.findById(courseID)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + courseID));
+
+        Teacher teacher = course.getTeacher();
+        List<Student> students = course.getStudents();
+        return course;
+    }
 
 }

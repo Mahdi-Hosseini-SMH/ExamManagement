@@ -9,15 +9,12 @@ import java.time.LocalDate;
 
 @Setter
 @Getter
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class CourseResponseDTO {
+    private String identifier;
     private String title;
     private LocalDate startDate;
     private LocalDate endDate;
 
-    public CourseResponseDTO(String title, LocalDate startDate, LocalDate endDate) {
-        this.title = title;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
 }

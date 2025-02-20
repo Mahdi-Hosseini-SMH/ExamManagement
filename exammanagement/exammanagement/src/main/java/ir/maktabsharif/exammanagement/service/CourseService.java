@@ -25,12 +25,19 @@ public interface CourseService extends BaseService<Course, CourseRequestDTO>{
     @Override
     Optional<Course> findById(UUID uuid);
 
-    public Course addTeacherToCourse(String identifier , UUID teacherId);
+    public Course addTeacherToCourse(String identifier , String nationalCode);
 
     public List<CourseResponseDTO> getAllTeachers();
 
     public List<CourseResponseDTO> getCoursesWithoutTeacher();
 
-    public Course addStudentToCourse(UUID courseID, UUID studentID);
+    public Course addStudentToCourse(String identifier, String nationalCode);
 
+    public Course updateTeacherInCourse(String identifier, Teacher teacher);
+
+    public Course removeStudentFromCourse(UUID courseID, UUID studentID);
+
+    public void removeTeacherFromCourse(String identifier);
+
+    public Course getCourseWithParticipants(UUID courseID);
 }

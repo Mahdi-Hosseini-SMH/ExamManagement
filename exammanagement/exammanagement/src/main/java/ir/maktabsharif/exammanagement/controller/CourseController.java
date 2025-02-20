@@ -2,7 +2,9 @@ package ir.maktabsharif.exammanagement.controller;
 
 import ir.maktabsharif.exammanagement.model.dto.courseDTO.CourseRequestDTO;
 import ir.maktabsharif.exammanagement.model.dto.courseDTO.CourseResponseDTO;
+import ir.maktabsharif.exammanagement.model.dto.teacherDTO.TeacherRequestDTO;
 import ir.maktabsharif.exammanagement.model.entity.Course;
+import ir.maktabsharif.exammanagement.model.entity.Teacher;
 import ir.maktabsharif.exammanagement.service.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,21 +28,28 @@ public class CourseController {
         return ResponseEntity.ok(courseService.register(courseRequestDTO));
     }
 
-    @PostMapping("/add-teacher/{identifier}/teachers/{teacherId}")
-    public ResponseEntity<Course> addTeacherToCourse(@PathVariable String identifier, @PathVariable UUID teacherId) {
+    @PostMapping("/add-teacher/{identifier}/teachers/{nationalCode}")
+    public ResponseEntity<String> addTeacherToCourse(@PathVariable String identifier, @PathVariable String nationalCode) {
 
-        Course updatedCourse = courseService.addTeacherToCourse(identifier, teacherId);
+        Course updatedCourse = courseService.addTeacherToCourse(identifier, nationalCode);
+        return ResponseEntity.ok("استاد برای دوره تعریف شد");
+
+    }
+
+    @PutMapping("/update/teacher/{identifier}")
+    public ResponseEntity<Course> updateTeacher(@PathVariable String identifier, @RequestBody Teacher teacher) {
+        Course updatedCourse = courseService.updateTeacherInCourse(identifier, teacher);
+        return ResponseEntity.ok(updatedCourse);
+    }
+
+    @PostMapping("/add-student/{identifier}/students/{nationalCode}")
+    public ResponseEntity<Course> addStudentToCourse(@PathVariable String identifier, @PathVariable String nationalCode) {
+
+        Course updatedCourse = courseService.addStudentToCourse(identifier, nationalCode);
         return new ResponseEntity<>(updatedCourse, HttpStatus.OK);
 
     }
 
-    @PostMapping("/add-student/{courseId}/students/{studentId}")
-    public ResponseEntity<Course> addStudentToCourse(@PathVariable UUID courseId, @PathVariable UUID studentId) {
-
-        Course updatedCourse = courseService.addStudentToCourse(courseId, studentId);
-        return new ResponseEntity<>(updatedCourse, HttpStatus.OK);
-
-    }
 
     @GetMapping("/courses")
     public ResponseEntity<List<CourseResponseDTO>> getAllCourses() {
@@ -58,7 +67,7 @@ public class CourseController {
     public ResponseEntity<String> updateCourse(@PathVariable UUID id, @RequestBody CourseRequestDTO courseRequestDTO) {
         boolean isUpdated = courseService.update(id, courseRequestDTO);
         if (isUpdated) {
-            return  ResponseEntity.ok("آپدیت با موفقیت انجام شد");
+            return ResponseEntity.ok("آپدیت با موفقیت انجام شد");
         } else {
             return ResponseEntity.status(404).body("ایدی یافت نشد");
         }
@@ -67,6 +76,25 @@ public class CourseController {
     @DeleteMapping("delete/{id}")
     public ResponseEntity<String> deleteCourse(@PathVariable UUID id) {
         courseService.delete(id);
-        return  ResponseEntity.ok("دوره حذف شد");
+        return ResponseEntity.ok("دوره حذف شد");
     }
+
+    @DeleteMapping("delete/teacher/{identifier}")
+    public ResponseEntity<String> removeTeacher(@PathVariable String identifier) {
+        courseService.removeTeacherFromCourse(identifier);
+        return ResponseEntity.ok("استاد از دوره حذف شد");
+    }
+
+    @DeleteMapping("/delete-student/{courseID}/students/{studentID}")
+    public ResponseEntity<String> removeStudent(@PathVariable UUID courseID, @PathVariable UUID studentID) {
+        courseService.removeStudentFromCourse(courseID, studentID);
+        return ResponseEntity.ok("دانشجو از دوره حذف شد");
+    }
+
+    @GetMapping("/participants/{courseID}")
+    public ResponseEntity<Course> getCourseWithParticipants(@PathVariable UUID courseID) {
+        Course course = courseService.getCourseWithParticipants(courseID);
+        return ResponseEntity.ok(course);
+    }
+
 }

@@ -1,7 +1,12 @@
 package ir.maktabsharif.exammanagement.service.impl;
 
+import ir.maktabsharif.exammanagement.model.dto.courseDTO.CourseResponseDTO;
 import ir.maktabsharif.exammanagement.model.dto.studentDTO.StudentRequestDTO;
+import ir.maktabsharif.exammanagement.model.dto.studentDTO.StudentResponseDTO;
+import ir.maktabsharif.exammanagement.model.dto.teacherDTO.TeacherResponseDTO;
+import ir.maktabsharif.exammanagement.model.entity.Course;
 import ir.maktabsharif.exammanagement.model.entity.Student;
+import ir.maktabsharif.exammanagement.model.entity.Teacher;
 import ir.maktabsharif.exammanagement.model.enums.Role;
 import ir.maktabsharif.exammanagement.model.enums.Status;
 import ir.maktabsharif.exammanagement.repository.StudentRepository;
@@ -13,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -75,6 +81,25 @@ public class StudentServiceImpl implements StudentService {
     public Optional<Student> findById(UUID uuid) {
         return studentRepository.findById(uuid);
     }
+
+    @Override
+    public List<StudentResponseDTO> getAllStudent() {
+        List<Student> students = studentRepository.findAll();
+        return students.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public StudentResponseDTO convertToDTO(Student student) {
+        return new StudentResponseDTO(
+                student.getFirstName(),
+                student.getLastName(),
+                student.getNationalCode(),
+                student.getDateOfBirth(),
+                student.getPhoneNumber(),
+                student.getStatus()
+        );
+    }
+
 
 }
 
