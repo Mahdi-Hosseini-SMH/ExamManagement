@@ -23,5 +23,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     List<User> findAll(Specification<User> specification);
 
+    User findByUsername(String username);
 }
 

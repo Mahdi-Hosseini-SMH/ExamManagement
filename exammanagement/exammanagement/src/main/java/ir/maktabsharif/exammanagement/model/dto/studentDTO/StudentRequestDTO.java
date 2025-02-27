@@ -15,8 +15,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class StudentRequestDTO {
-//    @NotBlank(message = "نام نمی‌تواند خالی باشد")
-//    @Size(min = 2, max = 50, message = "نام باید بین 2 تا 20 کاراکتر باشد")
+//    @NotBlank(message = "Name cannot be empty.")
+//    @Size(min = 2, max = 50, message = "The name must be between 2 and 20 characters.")
     private String firstName;
 
 //    @NotBlank(message = "نام خانوادگی نمی‌تواند خالی باشد")

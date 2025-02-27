@@ -2,6 +2,7 @@ package ir.maktabsharif.exammanagement.service;
 
 import ir.maktabsharif.exammanagement.model.dto.teacherDTO.TeacherRequestDTO;
 import ir.maktabsharif.exammanagement.model.dto.teacherDTO.TeacherResponseDTO;
+import ir.maktabsharif.exammanagement.model.entity.Course;
 import ir.maktabsharif.exammanagement.model.entity.Teacher;
 
 import java.util.List;
@@ -23,5 +24,10 @@ public interface TeacherService extends BaseService<Teacher, TeacherRequestDTO> 
 
     List<TeacherResponseDTO> getAllTeachers();
 
-    public TeacherResponseDTO convertToDTO(Teacher teacher);
+    TeacherResponseDTO convertToDTO(Teacher teacher);
+
+    Optional<Teacher> loginTeacher (String username, String password);
+
+    public List<Course> getCoursesByTeacher(UUID teacherId);
+
 }

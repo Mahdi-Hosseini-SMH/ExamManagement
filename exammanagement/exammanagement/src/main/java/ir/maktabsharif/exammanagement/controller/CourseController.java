@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -32,7 +33,7 @@ public class CourseController {
     public ResponseEntity<String> addTeacherToCourse(@PathVariable String identifier, @PathVariable String nationalCode) {
 
         Course updatedCourse = courseService.addTeacherToCourse(identifier, nationalCode);
-        return ResponseEntity.ok("استاد برای دوره تعریف شد");
+        return ResponseEntity.ok("The teacher was appointed for the course.");
 
     }
 
@@ -67,28 +68,28 @@ public class CourseController {
     public ResponseEntity<String> updateCourse(@PathVariable UUID id, @RequestBody CourseRequestDTO courseRequestDTO) {
         boolean isUpdated = courseService.update(id, courseRequestDTO);
         if (isUpdated) {
-            return ResponseEntity.ok("آپدیت با موفقیت انجام شد");
+            return ResponseEntity.ok("The update was successful.");
         } else {
-            return ResponseEntity.status(404).body("ایدی یافت نشد");
+            return ResponseEntity.status(404).body("ID not found");
         }
     }
 
     @DeleteMapping("delete/{id}")
     public ResponseEntity<String> deleteCourse(@PathVariable UUID id) {
         courseService.delete(id);
-        return ResponseEntity.ok("دوره حذف شد");
+        return ResponseEntity.ok("Course deleted.");
     }
 
     @DeleteMapping("delete/teacher/{identifier}")
     public ResponseEntity<String> removeTeacher(@PathVariable String identifier) {
         courseService.removeTeacherFromCourse(identifier);
-        return ResponseEntity.ok("استاد از دوره حذف شد");
+        return ResponseEntity.ok("The teacher was removed from the course.");
     }
 
     @DeleteMapping("/delete-student/{courseID}/students/{studentID}")
     public ResponseEntity<String> removeStudent(@PathVariable UUID courseID, @PathVariable UUID studentID) {
         courseService.removeStudentFromCourse(courseID, studentID);
-        return ResponseEntity.ok("دانشجو از دوره حذف شد");
+        return ResponseEntity.ok("Student was removed from the course.");
     }
 
     @GetMapping("/participants/{courseID}")
@@ -97,4 +98,9 @@ public class CourseController {
         return ResponseEntity.ok(course);
     }
 
+    @GetMapping("/{courseId}")
+    public ResponseEntity<Course> findById(@PathVariable UUID courseId){
+        Optional<Course> courseOptional = courseService.findById(courseId);
+        return courseOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 }

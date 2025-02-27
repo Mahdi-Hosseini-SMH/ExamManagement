@@ -5,6 +5,7 @@ import ir.maktabsharif.exammanagement.model.dto.courseDTO.CourseResponseDTO;
 import ir.maktabsharif.exammanagement.model.entity.Course;
 import ir.maktabsharif.exammanagement.model.entity.Student;
 import ir.maktabsharif.exammanagement.model.entity.Teacher;
+import ir.maktabsharif.exammanagement.model.enums.Status;
 import ir.maktabsharif.exammanagement.repository.CourseRepository;
 import ir.maktabsharif.exammanagement.repository.StudentRepository;
 import ir.maktabsharif.exammanagement.repository.TeacherRepository;
@@ -70,13 +71,16 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Optional<Course> findById(UUID uuid) {
-        return Optional.empty();
+        return courseRepository.findById(uuid);
     }
 
     public Course addStudentToCourse(String identifier, String nationalCode) {
 
         Student student = studentRepository.findByNationalCode(nationalCode)
                 .orElseThrow(() -> new EntityNotFoundException("Student not found with id: " + nationalCode));
+        if (!student.getStatus().equals(Status.APPROVED)) {
+            throw new RuntimeException("ثبت نام دانش اموز تایید نشده");
+        }
 
         Course course = courseRepository.findByIdentifier(identifier)
                 .orElseThrow(() -> new EntityNotFoundException("Course not found with id: " + identifier));
@@ -96,6 +100,9 @@ public class CourseServiceImpl implements CourseService {
 
         Teacher teacher = teacherRepository.findByNationalCode(nationalCode)
                 .orElseThrow(() -> new RuntimeException("Teacher not found"));
+        if (!teacher.getStatus().equals(Status.APPROVED)) {
+            throw new RuntimeException("ثبت نام استاد تایید نشده");
+        }
 
         Course course = courseRepository.findByIdentifier(identifier)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
@@ -139,7 +146,7 @@ public class CourseServiceImpl implements CourseService {
 
         List<Student> students = course.getStudents();
         if (students != null) {
-            students.removeIf(student -> student.getId().equals(studentID)); // حذف دانشجو
+            students.removeIf(student -> student.getId().equals(studentID));
         }
         course.setStudents(students);
         return courseRepository.save(course);
@@ -161,6 +168,15 @@ public class CourseServiceImpl implements CourseService {
         Teacher teacher = course.getTeacher();
         List<Student> students = course.getStudents();
         return course;
+    }
+
+    public List<Course> getCoursesByTeacherId(UUID teacherId) {
+        return courseRepository.findByTeacherId(teacherId);
+    }
+
+    @Override
+    public Optional<Course> findByIdentifier(String identifier) {
+       return courseRepository.findByIdentifier(identifier);
     }
 
 }

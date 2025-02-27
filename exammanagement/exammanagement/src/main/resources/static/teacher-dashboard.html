@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد استاد</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #fff;
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #ddd;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>پنل استاد</h1>
+    <div class="dashboard-cards">
+        <div class="card fade-in" onclick="navigateTo('list-course-teacher')">
+            <h2>دوره ها</h2>
+
+        </div>
+
+<!--        <div class="card fade-in" onclick="navigateTo('approve-users')">-->
+<!--            <h2>تایید ثبت نام کاربران</h2>-->
+<!--            <p>تایید یا رد درخواست‌های ثبت نام کاربران.</p>-->
+<!--        </div>-->
+
+<!--        <div class="card fade-in" onclick="navigateTo('search')">-->
+<!--            <h2>مشاهده استاد/دانشجو , آپدیت</h2>-->
+
+<!--        </div>-->
+
+<!--        <div class="card fade-in" onclick="navigateTo('define-course')">-->
+<!--            <h2>تعریف دوره جدید</h2>-->
+<!--            <p>تعریف دوره‌های جدید توسط مدیر.</p>-->
+<!--        </div>-->
+
+<!--        <div class="card fade-in" onclick="navigateTo('add-teacher-to-course')">-->
+<!--            <h2>افزودن استاد به دوره</h2>-->
+<!--            <p>افزودن اساتید به دوره‌های تعریف شده.</p>-->
+<!--        </div>-->
+
+<!--        <div class="card fade-in" onclick="navigateTo('add-student-to-course')">-->
+<!--            <h2>افزودن دانشجو به دوره</h2>-->
+<!--            <p>افزودن دانشجویان به دوره‌های تعریف شده.</p>-->
+<!--        </div>-->
+
+        <!--        <div class="card fade-in" onclick="navigateTo('define-exam')">-->
+        <!--            <h2>تعریف آزمون</h2>-->
+        <!--            <p>تعریف آزمون‌های جدید توسط اساتید.</p>-->
+        <!--        </div>-->
+
+        <!--        <div class="card fade-in" onclick="navigateTo('add-questions')">-->
+        <!--            <h2>افزودن سوالات به آزمون</h2>-->
+        <!--            <p>افزودن سوالات چند گزینه‌ای و تشریحی به آزمون‌ها.</p>-->
+        <!--        </div>-->
+
+        <!--        <div class="card fade-in" onclick="navigateTo('question-bank')">-->
+        <!--            <h2>بانک سوالات</h2>-->
+        <!--            <p>مدیریت و مشاهده بانک سوالات.</p>-->
+        <!--        </div>-->
+
+        <!--        <div class="card fade-in" onclick="navigateTo('set-default-grade')">-->
+        <!--            <h2>تعیین نمره پیش‌فرض</h2>-->
+        <!--            <p>تعیین نمره پیش‌فرض برای سوالات آزمون.</p>-->
+        <!--        </div>-->
+
+        <!--        <div class="card fade-in" onclick="navigateTo('conduct-exam')">-->
+        <!--            <h2>برگزاری آزمون</h2>-->
+        <!--            <p>برگزاری آزمون‌های تعریف شده.</p>-->
+        <!--        </div>-->
+
+        <!--        <div class="card fade-in" onclick="navigateTo('grade-students')">-->
+        <!--            <h2>نمره‌دهی به دانشجویان</h2>-->
+        <!--            <p>نمره‌دهی اتوماتیک و دستی به دانشجویان.</p>-->
+        <!--        </div>-->
+    </div>
+</div>
+
+<script>
+    function navigateTo(page) {
+        switch (page) {
+            case 'list-course-teacher':
+                window.location.href = 'course-teacher.html';
+                break;
+            case 'approve-users':
+                window.location.href = 'approve-users.html';
+                break;
+            case 'search':
+                window.location.href = 'search-and-update-users.html';
+                break;
+            case 'define-course':
+                window.location.href = 'course-definition.html';
+                break;
+            case 'add-teacher-to-course':
+                window.location.href = 'add-teacher-course.html';
+                break;
+            case 'add-student-to-course':
+                window.location.href = '/admin/add-student-to-course';
+                break;
+            case 'define-exam':
+                window.location.href = '/admin/define-exam';
+                break;
+            case 'add-questions':
+                window.location.href = '/admin/add-questions';
+                break;
+            case 'question-bank':
+                window.location.href = '/admin/question-bank';
+                break;
+            case 'set-default-grade':
+                window.location.href = '/admin/set-default-grade';
+                break;
+            case 'conduct-exam':
+                window.location.href = '/admin/conduct-exam';
+                break;
+            case 'grade-students':
+                window.location.href = '/admin/grade-students';
+                break;
+            default:
+                alert('صفحه مورد نظر یافت نشد!');
+        }
+    }
+</script>
+
+</body>
+</html>

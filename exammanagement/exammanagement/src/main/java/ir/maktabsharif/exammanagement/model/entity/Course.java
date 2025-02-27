@@ -26,4 +26,7 @@ public class Course extends BaseModel {
 
     @ManyToMany
     List<Student> students;
+
+    @OneToMany
+    private List<Exam> exams;
 }

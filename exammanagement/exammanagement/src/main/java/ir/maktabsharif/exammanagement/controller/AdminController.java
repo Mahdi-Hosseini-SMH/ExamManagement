@@ -31,9 +31,9 @@ public class AdminController {
     @PostMapping("/login")
     public ResponseEntity<String> loginAdmin(@RequestParam String username, @RequestParam String password) {
         if (adminService.loginAdmin(username, password)) {
-            return ResponseEntity.ok("لاگین موفقیت امیز بود");
+            return ResponseEntity.ok("Login was successful.");
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("نام کاربری یا رمز عبور اشتباه است.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("The username or password is incorrect.");
         }
     }
 
@@ -60,9 +60,9 @@ public class AdminController {
     public ResponseEntity<String> updateByNationalCode(@Valid @PathVariable String nationalCode, @RequestBody UserRequestDTO userRequestDTO) {
         boolean isUpdate = userService.updateByNationalCode(nationalCode, userRequestDTO);
         if (isUpdate) {
-            return ResponseEntity.ok("آپدیت با موفقیت انجام شد");
+            return ResponseEntity.ok("The update was successful.");
         } else {
-            return ResponseEntity.status(404).body("ایدی یافت نشد");
+            return ResponseEntity.status(404).body("ID not found");
         }
     }
 
@@ -70,7 +70,7 @@ public class AdminController {
     @Transactional
     public ResponseEntity<String> deleteUser(@PathVariable String nationalCode) {
         userService.deleteByNationalCode(nationalCode);
-        return ResponseEntity.ok("کاربر حذف شد");
+        return ResponseEntity.ok("User deleted.");
     }
 
     @GetMapping("users/filter")

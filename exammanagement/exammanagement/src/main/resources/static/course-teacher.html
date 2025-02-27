@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست دوره‌های استاد</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h2>لیست دوره‌های شما</h2>
+<ul id="courses-list">
+    <!-- دوره‌ها اینجا نمایش داده می‌شوند -->
+</ul>
+<button onclick="logout()">خروج</button>
+
+<script>
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    async function fetchCourses(teacherId) {
+        try {
+            const response = await fetch(`'http://localhost:8080/teacher/courses/${teacherId}`);
+            if (!response.ok) {
+                throw new Error('خطا در دریافت داده‌ها');
+            }
+            const courses = await response.json();
+            displayCourses(courses);
+        } catch (error) {
+            console.error('خطا:', error);
+            document.getElementById('courses-list').innerHTML = '<li>خطا در دریافت داده‌ها</li>';
+        }
+    }
+
+    function displayCourses(courses) {
+        const coursesList = document.getElementById('courses-list');
+        coursesList.innerHTML = '';
+
+        if (courses.length === 0) {
+            coursesList.innerHTML = '<li>هیچ دوره‌ای یافت نشد.</li>';
+            return;
+        }
+
+        courses.forEach(course => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                    <h3>${course.name}</h3>
+                    <p>${course.description}</p>
+                    <button onclick="handleCourseSelect('${course.id}')">مشاهده آزمون‌ها</button>
+                `;
+            coursesList.appendChild(listItem);
+        });
+    }
+
+    function handleCourseSelect(courseId) {
+        console.log('دوره انتخاب شده:', courseId);
+    }
+
+    function logout() {
+        document.cookie = 'teacherId=; Max-Age=0; path=/;';
+        window.location.href = 'login-teacher.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const teacherId = getCookie('teacherId');
+        if (teacherId) {
+            fetchCourses(teacherId);
+        } else {
+            window.location.href = '/login.html';
+        }
+    });
+</script>
+</body>
+</html>

@@ -84,7 +84,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<StudentResponseDTO> getAllStudent() {
-        List<Student> students = studentRepository.findAll();
+        List<Student> students = studentRepository.findAllByStatus(Status.APPROVED);
         return students.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 

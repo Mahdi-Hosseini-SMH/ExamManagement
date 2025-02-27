@@ -3,10 +3,12 @@ package ir.maktabsharif.exammanagement.service.impl;
 import ir.maktabsharif.exammanagement.model.dto.teacherDTO.TeacherRequestDTO;
 import ir.maktabsharif.exammanagement.model.dto.teacherDTO.TeacherResponseDTO;
 import ir.maktabsharif.exammanagement.model.dto.userDTO.UserResponseDTO;
+import ir.maktabsharif.exammanagement.model.entity.Course;
 import ir.maktabsharif.exammanagement.model.entity.Teacher;
 import ir.maktabsharif.exammanagement.model.entity.User;
 import ir.maktabsharif.exammanagement.model.enums.Role;
 import ir.maktabsharif.exammanagement.model.enums.Status;
+import ir.maktabsharif.exammanagement.repository.CourseRepository;
 import ir.maktabsharif.exammanagement.repository.TeacherRepository;
 import ir.maktabsharif.exammanagement.service.TeacherService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,9 +24,11 @@ import java.util.stream.Collectors;
 public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CourseRepository courseRepository;
 
-    public TeacherServiceImpl(TeacherRepository teacherRepository) {
+    public TeacherServiceImpl(TeacherRepository teacherRepository, CourseRepository courseRepository) {
         this.teacherRepository = teacherRepository;
+        this.courseRepository = courseRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -58,8 +62,21 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public Optional<Teacher> loginTeacher(String username, String password) {
+        Optional<Teacher> optionalTeacher = teacherRepository.findByUsername(username);
+        if (optionalTeacher.isPresent()) {
+            Teacher teacher = optionalTeacher.get();
+            if (passwordEncoder.matches(password, teacher.getPassword())) {
+                return Optional.of(teacher);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public List<TeacherResponseDTO> getAllTeachers() {
-        List<Teacher> teachers = teacherRepository.findAll();
+        List<Teacher> teachers = teacherRepository.findAllByStatus(Status.APPROVED);
         return teachers.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
@@ -105,5 +122,8 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherRepository.findAll();
     }
 
-    
+    public List<Course> getCoursesByTeacher(UUID teacherId){
+        return courseRepository.findByTeacherId(teacherId);
+    }
+
 }

@@ -28,5 +28,5 @@ public interface StudentService extends BaseService<Student , StudentRequestDTO>
 
     List<StudentResponseDTO> getAllStudent();
 
-    public StudentResponseDTO convertToDTO(Student student);
+     StudentResponseDTO convertToDTO(Student student);
 }

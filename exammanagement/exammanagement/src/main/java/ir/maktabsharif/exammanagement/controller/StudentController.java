@@ -23,16 +23,17 @@ public class StudentController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Student> registerStudent(/*@Valid*/ @RequestBody StudentRequestDTO studentRequestDTO){
+    public ResponseEntity<Student> registerStudent(/*@Valid*/ @RequestBody StudentRequestDTO studentRequestDTO) {
         return ResponseEntity.ok(studentService.register(studentRequestDTO));
     }
+
     @PutMapping("/{id}")
-    private ResponseEntity<String> updateStudent(/*@Valid*/ @PathVariable UUID id, @RequestBody StudentRequestDTO studentRequestDTO){
-        boolean isUpdate = studentService.update(id,studentRequestDTO);
-        if (isUpdate){
-            return ResponseEntity.ok("آپدیت با موفقیت انجام شد");
-        }else {
-            return ResponseEntity.status(404).body("ایدی یافت نشد");
+    private ResponseEntity<String> updateStudent(/*@Valid*/ @PathVariable UUID id, @RequestBody StudentRequestDTO studentRequestDTO) {
+        boolean isUpdate = studentService.update(id, studentRequestDTO);
+        if (isUpdate) {
+            return ResponseEntity.ok("The student update was successful.");
+        } else {
+            return ResponseEntity.status(404).body("not found id");
         }
 
     }
